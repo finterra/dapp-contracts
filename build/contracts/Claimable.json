@@ -1,0 +1,2371 @@
+{
+  "contractName": "Claimable",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "claimed",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_finMigrationContract",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousMigrationContract",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newMigrationContract",
+          "type": "address"
+        }
+      ],
+      "name": "MigrationSourceTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipRenounced",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_newMigrationContract",
+          "type": "address"
+        }
+      ],
+      "name": "transferMigrationSource",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b506040516020806106bc83398101806040528101908080519060200190929190505050336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555080600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550506105f8806100c46000396000f30060806040526004361061006d576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063715018a6146100725780638da5cb5b1461008957806391181c17146100e0578063c884ef8314610123578063f2fde38b1461017e575b600080fd5b34801561007e57600080fd5b506100876101c1565b005b34801561009557600080fd5b5061009e6102c3565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100ec57600080fd5b50610121600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506102e8565b005b34801561012f57600080fd5b50610164600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061034f565b604051808215151515815260200191505060405180910390f35b34801561018a57600080fd5b506101bf600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061036f565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561021c57600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167ff8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c6482060405160405180910390a260008060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561034357600080fd5b61034c816103d6565b50565b60026020528060005260406000206000915054906101000a900460ff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156103ca57600080fd5b6103d3816104d2565b50565b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561041257600080fd5b8073ffffffffffffffffffffffffffffffffffffffff16600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f7a00988434a2cc24b3b433c7ca3fc16cb892a027b7cbe0a380fc6383e04d88e960405160405180910390a380600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561050e57600080fd5b8073ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a3806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a723058204a05a0fbd85c7c41def3b7ca3fa7691cbe4681f6bbd3656a4dcf645eb88c13800029",
+  "deployedBytecode": "0x60806040526004361061006d576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063715018a6146100725780638da5cb5b1461008957806391181c17146100e0578063c884ef8314610123578063f2fde38b1461017e575b600080fd5b34801561007e57600080fd5b506100876101c1565b005b34801561009557600080fd5b5061009e6102c3565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100ec57600080fd5b50610121600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506102e8565b005b34801561012f57600080fd5b50610164600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061034f565b604051808215151515815260200191505060405180910390f35b34801561018a57600080fd5b506101bf600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061036f565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561021c57600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167ff8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c6482060405160405180910390a260008060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561034357600080fd5b61034c816103d6565b50565b60026020528060005260406000206000915054906101000a900460ff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156103ca57600080fd5b6103d3816104d2565b50565b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561041257600080fd5b8073ffffffffffffffffffffffffffffffffffffffff16600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f7a00988434a2cc24b3b433c7ca3fc16cb892a027b7cbe0a380fc6383e04d88e960405160405180910390a380600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561050e57600080fd5b8073ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a3806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a723058204a05a0fbd85c7c41def3b7ca3fa7691cbe4681f6bbd3656a4dcf645eb88c13800029",
+  "sourceMap": "340:1675:8:-;;;863:114;8:9:-1;5:2;;;30:1;27;20:12;5:2;863:114:8;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1779:10:17;1771:5;;:18;;;;;;;;;;;;;;;;;;949:21:8;926:20;;:44;;;;;;;;;;;;;;;;;;863:114;340:1675;;;;;;",
+  "deployedSourceMap": "340:1675:8:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2232:121:17;;8:9:-1;5:2;;;30:1;27;20:12;5:2;2232:121:17;;;;;;1417:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1417:20:17;;;;;;;;;;;;;;;;;;;;;;;;;;;1391:148:8;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1391:148:8;;;;;;;;;;;;;;;;;;;;;;;;;;;;540:40;;8:9:-1;5:2;;;30:1;27;20:12;5:2;540:40:8;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2522:109:17;;8:9:-1;5:2;;;30:1;27;20:12;5:2;2522:109:17;;;;;;;;;;;;;;;;;;;;;;;;;;;;2232:121;1935:5;;;;;;;;;;;1921:19;;:10;:19;;;1913:28;;;;;;;;2312:5;;;;;;;;;;;2293:25;;;;;;;;;;;;2344:1;2328:5;;:18;;;;;;;;;;;;;;;;;;2232:121::o;1417:20::-;;;;;;;;;;;;;:::o;1391:148:8:-;1935:5:17;;;;;;;;;;;1921:19;;:10;:19;;;1913:28;;;;;;;;1485:47:8;1510:21;1485:24;:47::i;:::-;1391:148;:::o;540:40::-;;;;;;;;;;;;;;;;;;;;;;:::o;2522:109:17:-;1935:5;;;;;;;;;;;1921:19;;:10;:19;;;1913:28;;;;;;;;2595:29;2614:9;2595:18;:29::i;:::-;2522:109;:::o;1735:278:8:-;1863:1;1830:35;;:21;:35;;;;1822:44;;;;;;;;1930:21;1881:71;;1908:20;;;;;;;;;;;1881:71;;;;;;;;;;;;1985:21;1962:20;;:44;;;;;;;;;;;;;;;;;;1735:278;:::o;2773:185:17:-;2868:1;2847:23;;:9;:23;;;;2839:32;;;;;;;;2914:9;2886:38;;2907:5;;;;;;;;;;;2886:38;;;;;;;;;;;;2942:9;2934:5;;:17;;;;;;;;;;;;;;;;;;2773:185;:::o",
+  "source": "pragma solidity ^0.4.24;\n\nimport \"../../FIN-MIGRATE/contracts/FINMigrate.sol\";\nimport \"../../OWNABLE/Ownable.sol\";\n\n/**\n * @title Claimable\n * @dev The Claimable contract has an claim contract address, and provides basic authorization control\n * for the minting functions, this simplifies the implementation of \"minting permissions\".\n */\n\n\ncontract Claimable is Ownable {\n    //FINMigrate var definition\n    FINMigrate finMigrationContract;\n\n    // an address map used to store the cliamed flag, so accounts cannot claim more than once\n    mapping (address => bool) public claimed;\n\n    event MigrationSourceTransferred(\n        address indexed previousMigrationContract,\n        address indexed newMigrationContract\n    );\n\n\n    /**\n    * @dev The Claimable constructor sets the original `claim contract` to the provided _claimContract\n    * account.\n    */\n    constructor(FINMigrate _finMigrationContract) public {\n        finMigrationContract = _finMigrationContract;\n    }\n\n    /**\n    * @dev Throws if called by any account other than the claimContract.\n    */\n    modifier canClaim() {\n        require(finMigrationContract.recordGet(msg.sender) != 0);\n        require(claimed[msg.sender] == false);\n        _;\n    }\n\n    /**\n    * @dev Allows to change the migration information source contract.\n    * @param _newMigrationContract The address of the new migration contract\n    */\n    function transferMigrationSource(FINMigrate _newMigrationContract) public onlyOwner {\n        _transferMigrationSource(_newMigrationContract);\n    }\n\n    /**\n    * @dev Transfers the reference of the recorded migrations contract to a newMigrationContract.\n    * @param _newMigrationContract The address of the new migration contract\n    */\n    function _transferMigrationSource(FINMigrate _newMigrationContract) internal {\n        require(_newMigrationContract != address(0));\n        emit MigrationSourceTransferred(finMigrationContract, _newMigrationContract);\n        finMigrationContract = _newMigrationContract;\n    }\n}",
+  "sourcePath": "/media/toniya/HDD/dapp_contracts/contracts/FIN-ERC20/contracts/Claimable.sol",
+  "ast": {
+    "absolutePath": "/media/toniya/HDD/dapp_contracts/contracts/FIN-ERC20/contracts/Claimable.sol",
+    "exportedSymbols": {
+      "Claimable": [
+        1250
+      ]
+    },
+    "id": 1251,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1165,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:8"
+      },
+      {
+        "absolutePath": "/media/toniya/HDD/dapp_contracts/contracts/FIN-MIGRATE/contracts/FINMigrate.sol",
+        "file": "../../FIN-MIGRATE/contracts/FINMigrate.sol",
+        "id": 1166,
+        "nodeType": "ImportDirective",
+        "scope": 1251,
+        "sourceUnit": 2322,
+        "src": "26:52:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/media/toniya/HDD/dapp_contracts/contracts/OWNABLE/Ownable.sol",
+        "file": "../../OWNABLE/Ownable.sol",
+        "id": 1167,
+        "nodeType": "ImportDirective",
+        "scope": 1251,
+        "sourceUnit": 2559,
+        "src": "79:35:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 1168,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 2558,
+              "src": "362:7:8",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$2558",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 1169,
+            "nodeType": "InheritanceSpecifier",
+            "src": "362:7:8"
+          }
+        ],
+        "contractDependencies": [
+          2558
+        ],
+        "contractKind": "contract",
+        "documentation": "@title Claimable\n@dev The Claimable contract has an claim contract address, and provides basic authorization control\nfor the minting functions, this simplifies the implementation of \"minting permissions\".",
+        "fullyImplemented": true,
+        "id": 1250,
+        "linearizedBaseContracts": [
+          1250,
+          2558
+        ],
+        "name": "Claimable",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 1171,
+            "name": "finMigrationContract",
+            "nodeType": "VariableDeclaration",
+            "scope": 1250,
+            "src": "408:31:8",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_FINMigrate_$2321",
+              "typeString": "contract FINMigrate"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 1170,
+              "name": "FINMigrate",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 2321,
+              "src": "408:10:8",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                "typeString": "contract FINMigrate"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 1175,
+            "name": "claimed",
+            "nodeType": "VariableDeclaration",
+            "scope": 1250,
+            "src": "540:40:8",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+              "typeString": "mapping(address => bool)"
+            },
+            "typeName": {
+              "id": 1174,
+              "keyType": {
+                "id": 1172,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "549:7:8",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "540:25:8",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                "typeString": "mapping(address => bool)"
+              },
+              "valueType": {
+                "id": 1173,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "560:4:8",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 1181,
+            "name": "MigrationSourceTransferred",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 1180,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1177,
+                  "indexed": true,
+                  "name": "previousMigrationContract",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1181,
+                  "src": "629:41:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1176,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "629:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1179,
+                  "indexed": true,
+                  "name": "newMigrationContract",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1181,
+                  "src": "680:36:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1178,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "680:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "619:103:8"
+            },
+            "src": "587:136:8"
+          },
+          {
+            "body": {
+              "id": 1190,
+              "nodeType": "Block",
+              "src": "916:61:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1188,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 1186,
+                      "name": "finMigrationContract",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1171,
+                      "src": "926:20:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                        "typeString": "contract FINMigrate"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 1187,
+                      "name": "_finMigrationContract",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1183,
+                      "src": "949:21:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                        "typeString": "contract FINMigrate"
+                      }
+                    },
+                    "src": "926:44:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                      "typeString": "contract FINMigrate"
+                    }
+                  },
+                  "id": 1189,
+                  "nodeType": "ExpressionStatement",
+                  "src": "926:44:8"
+                }
+              ]
+            },
+            "documentation": "@dev The Claimable constructor sets the original `claim contract` to the provided _claimContract\naccount.",
+            "id": 1191,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1184,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1183,
+                  "name": "_finMigrationContract",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1191,
+                  "src": "875:32:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                    "typeString": "contract FINMigrate"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1182,
+                    "name": "FINMigrate",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2321,
+                    "src": "875:10:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                      "typeString": "contract FINMigrate"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "874:34:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1185,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "916:0:8"
+            },
+            "scope": 1250,
+            "src": "863:114:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1213,
+              "nodeType": "Block",
+              "src": "1091:131:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 1200,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 1196,
+                                "name": "msg",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 2573,
+                                "src": "1140:3:8",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_magic_message",
+                                  "typeString": "msg"
+                                }
+                              },
+                              "id": 1197,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "sender",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": null,
+                              "src": "1140:10:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 1194,
+                              "name": "finMigrationContract",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 1171,
+                              "src": "1109:20:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                                "typeString": "contract FINMigrate"
+                              }
+                            },
+                            "id": 1195,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "recordGet",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": 2320,
+                            "src": "1109:30:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
+                              "typeString": "function (address) view external returns (uint256)"
+                            }
+                          },
+                          "id": 1198,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1109:42:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 1199,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1155:1:8",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        "src": "1109:47:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 1193,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        2576,
+                        2577
+                      ],
+                      "referencedDeclaration": 2576,
+                      "src": "1101:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 1201,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1101:56:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1202,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1101:56:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        "id": 1209,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "baseExpression": {
+                            "argumentTypes": null,
+                            "id": 1204,
+                            "name": "claimed",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 1175,
+                            "src": "1175:7:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                              "typeString": "mapping(address => bool)"
+                            }
+                          },
+                          "id": 1207,
+                          "indexExpression": {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 1205,
+                              "name": "msg",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 2573,
+                              "src": "1183:3:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_magic_message",
+                                "typeString": "msg"
+                              }
+                            },
+                            "id": 1206,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "sender",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "1183:10:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          },
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "nodeType": "IndexAccess",
+                          "src": "1175:19:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "66616c7365",
+                          "id": 1208,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "bool",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1198:5:8",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          },
+                          "value": "false"
+                        },
+                        "src": "1175:28:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 1203,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        2576,
+                        2577
+                      ],
+                      "referencedDeclaration": 2576,
+                      "src": "1167:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 1210,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1167:37:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1211,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1167:37:8"
+                },
+                {
+                  "id": 1212,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "1214:1:8"
+                }
+              ]
+            },
+            "documentation": "@dev Throws if called by any account other than the claimContract.",
+            "id": 1214,
+            "name": "canClaim",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 1192,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1088:2:8"
+            },
+            "src": "1071:151:8",
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 1225,
+              "nodeType": "Block",
+              "src": "1475:64:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 1222,
+                        "name": "_newMigrationContract",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1216,
+                        "src": "1510:21:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        }
+                      ],
+                      "id": 1221,
+                      "name": "_transferMigrationSource",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1249,
+                      "src": "1485:24:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_contract$_FINMigrate_$2321_$returns$__$",
+                        "typeString": "function (contract FINMigrate)"
+                      }
+                    },
+                    "id": 1223,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1485:47:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1224,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1485:47:8"
+                }
+              ]
+            },
+            "documentation": "@dev Allows to change the migration information source contract.\n@param _newMigrationContract The address of the new migration contract",
+            "id": 1226,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 1219,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 1218,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 2506,
+                  "src": "1465:9:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1465:9:8"
+              }
+            ],
+            "name": "transferMigrationSource",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1217,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1216,
+                  "name": "_newMigrationContract",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1226,
+                  "src": "1424:32:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                    "typeString": "contract FINMigrate"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1215,
+                    "name": "FINMigrate",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2321,
+                    "src": "1424:10:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                      "typeString": "contract FINMigrate"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1423:34:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1220,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1475:0:8"
+            },
+            "scope": 1250,
+            "src": "1391:148:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1248,
+              "nodeType": "Block",
+              "src": "1812:201:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 1236,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 1232,
+                          "name": "_newMigrationContract",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1228,
+                          "src": "1830:21:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                            "typeString": "contract FINMigrate"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 1234,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "1863:1:8",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 1233,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "1855:7:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 1235,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1855:10:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "1830:35:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 1231,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        2576,
+                        2577
+                      ],
+                      "referencedDeclaration": 2576,
+                      "src": "1822:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 1237,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1822:44:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1238,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1822:44:8"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 1240,
+                        "name": "finMigrationContract",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1171,
+                        "src": "1908:20:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 1241,
+                        "name": "_newMigrationContract",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1228,
+                        "src": "1930:21:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        },
+                        {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        }
+                      ],
+                      "id": 1239,
+                      "name": "MigrationSourceTransferred",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1181,
+                      "src": "1881:26:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$returns$__$",
+                        "typeString": "function (address,address)"
+                      }
+                    },
+                    "id": 1242,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1881:71:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1243,
+                  "nodeType": "EmitStatement",
+                  "src": "1876:76:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1246,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 1244,
+                      "name": "finMigrationContract",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1171,
+                      "src": "1962:20:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                        "typeString": "contract FINMigrate"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 1245,
+                      "name": "_newMigrationContract",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1228,
+                      "src": "1985:21:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                        "typeString": "contract FINMigrate"
+                      }
+                    },
+                    "src": "1962:44:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                      "typeString": "contract FINMigrate"
+                    }
+                  },
+                  "id": 1247,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1962:44:8"
+                }
+              ]
+            },
+            "documentation": "@dev Transfers the reference of the recorded migrations contract to a newMigrationContract.\n@param _newMigrationContract The address of the new migration contract",
+            "id": 1249,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "_transferMigrationSource",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1229,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1228,
+                  "name": "_newMigrationContract",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1249,
+                  "src": "1769:32:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                    "typeString": "contract FINMigrate"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1227,
+                    "name": "FINMigrate",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2321,
+                    "src": "1769:10:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                      "typeString": "contract FINMigrate"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1768:34:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1230,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1812:0:8"
+            },
+            "scope": 1250,
+            "src": "1735:278:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 1251,
+        "src": "340:1675:8"
+      }
+    ],
+    "src": "0:2015:8"
+  },
+  "legacyAST": {
+    "absolutePath": "/media/toniya/HDD/dapp_contracts/contracts/FIN-ERC20/contracts/Claimable.sol",
+    "exportedSymbols": {
+      "Claimable": [
+        1250
+      ]
+    },
+    "id": 1251,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1165,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:8"
+      },
+      {
+        "absolutePath": "/media/toniya/HDD/dapp_contracts/contracts/FIN-MIGRATE/contracts/FINMigrate.sol",
+        "file": "../../FIN-MIGRATE/contracts/FINMigrate.sol",
+        "id": 1166,
+        "nodeType": "ImportDirective",
+        "scope": 1251,
+        "sourceUnit": 2322,
+        "src": "26:52:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/media/toniya/HDD/dapp_contracts/contracts/OWNABLE/Ownable.sol",
+        "file": "../../OWNABLE/Ownable.sol",
+        "id": 1167,
+        "nodeType": "ImportDirective",
+        "scope": 1251,
+        "sourceUnit": 2559,
+        "src": "79:35:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 1168,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 2558,
+              "src": "362:7:8",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$2558",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 1169,
+            "nodeType": "InheritanceSpecifier",
+            "src": "362:7:8"
+          }
+        ],
+        "contractDependencies": [
+          2558
+        ],
+        "contractKind": "contract",
+        "documentation": "@title Claimable\n@dev The Claimable contract has an claim contract address, and provides basic authorization control\nfor the minting functions, this simplifies the implementation of \"minting permissions\".",
+        "fullyImplemented": true,
+        "id": 1250,
+        "linearizedBaseContracts": [
+          1250,
+          2558
+        ],
+        "name": "Claimable",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 1171,
+            "name": "finMigrationContract",
+            "nodeType": "VariableDeclaration",
+            "scope": 1250,
+            "src": "408:31:8",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_FINMigrate_$2321",
+              "typeString": "contract FINMigrate"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 1170,
+              "name": "FINMigrate",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 2321,
+              "src": "408:10:8",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                "typeString": "contract FINMigrate"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 1175,
+            "name": "claimed",
+            "nodeType": "VariableDeclaration",
+            "scope": 1250,
+            "src": "540:40:8",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+              "typeString": "mapping(address => bool)"
+            },
+            "typeName": {
+              "id": 1174,
+              "keyType": {
+                "id": 1172,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "549:7:8",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "540:25:8",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                "typeString": "mapping(address => bool)"
+              },
+              "valueType": {
+                "id": 1173,
+                "name": "bool",
+                "nodeType": "ElementaryTypeName",
+                "src": "560:4:8",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 1181,
+            "name": "MigrationSourceTransferred",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 1180,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1177,
+                  "indexed": true,
+                  "name": "previousMigrationContract",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1181,
+                  "src": "629:41:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1176,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "629:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1179,
+                  "indexed": true,
+                  "name": "newMigrationContract",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1181,
+                  "src": "680:36:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1178,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "680:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "619:103:8"
+            },
+            "src": "587:136:8"
+          },
+          {
+            "body": {
+              "id": 1190,
+              "nodeType": "Block",
+              "src": "916:61:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1188,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 1186,
+                      "name": "finMigrationContract",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1171,
+                      "src": "926:20:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                        "typeString": "contract FINMigrate"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 1187,
+                      "name": "_finMigrationContract",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1183,
+                      "src": "949:21:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                        "typeString": "contract FINMigrate"
+                      }
+                    },
+                    "src": "926:44:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                      "typeString": "contract FINMigrate"
+                    }
+                  },
+                  "id": 1189,
+                  "nodeType": "ExpressionStatement",
+                  "src": "926:44:8"
+                }
+              ]
+            },
+            "documentation": "@dev The Claimable constructor sets the original `claim contract` to the provided _claimContract\naccount.",
+            "id": 1191,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1184,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1183,
+                  "name": "_finMigrationContract",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1191,
+                  "src": "875:32:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                    "typeString": "contract FINMigrate"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1182,
+                    "name": "FINMigrate",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2321,
+                    "src": "875:10:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                      "typeString": "contract FINMigrate"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "874:34:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1185,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "916:0:8"
+            },
+            "scope": 1250,
+            "src": "863:114:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1213,
+              "nodeType": "Block",
+              "src": "1091:131:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 1200,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 1196,
+                                "name": "msg",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 2573,
+                                "src": "1140:3:8",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_magic_message",
+                                  "typeString": "msg"
+                                }
+                              },
+                              "id": 1197,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "sender",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": null,
+                              "src": "1140:10:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 1194,
+                              "name": "finMigrationContract",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 1171,
+                              "src": "1109:20:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                                "typeString": "contract FINMigrate"
+                              }
+                            },
+                            "id": 1195,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "recordGet",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": 2320,
+                            "src": "1109:30:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
+                              "typeString": "function (address) view external returns (uint256)"
+                            }
+                          },
+                          "id": 1198,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1109:42:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 1199,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1155:1:8",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        "src": "1109:47:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 1193,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        2576,
+                        2577
+                      ],
+                      "referencedDeclaration": 2576,
+                      "src": "1101:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 1201,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1101:56:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1202,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1101:56:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        "id": 1209,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "baseExpression": {
+                            "argumentTypes": null,
+                            "id": 1204,
+                            "name": "claimed",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 1175,
+                            "src": "1175:7:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_mapping$_t_address_$_t_bool_$",
+                              "typeString": "mapping(address => bool)"
+                            }
+                          },
+                          "id": 1207,
+                          "indexExpression": {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 1205,
+                              "name": "msg",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 2573,
+                              "src": "1183:3:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_magic_message",
+                                "typeString": "msg"
+                              }
+                            },
+                            "id": 1206,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "sender",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "1183:10:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          },
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "nodeType": "IndexAccess",
+                          "src": "1175:19:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "66616c7365",
+                          "id": 1208,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "bool",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1198:5:8",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          },
+                          "value": "false"
+                        },
+                        "src": "1175:28:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 1203,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        2576,
+                        2577
+                      ],
+                      "referencedDeclaration": 2576,
+                      "src": "1167:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 1210,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1167:37:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1211,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1167:37:8"
+                },
+                {
+                  "id": 1212,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "1214:1:8"
+                }
+              ]
+            },
+            "documentation": "@dev Throws if called by any account other than the claimContract.",
+            "id": 1214,
+            "name": "canClaim",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 1192,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1088:2:8"
+            },
+            "src": "1071:151:8",
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 1225,
+              "nodeType": "Block",
+              "src": "1475:64:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 1222,
+                        "name": "_newMigrationContract",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1216,
+                        "src": "1510:21:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        }
+                      ],
+                      "id": 1221,
+                      "name": "_transferMigrationSource",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1249,
+                      "src": "1485:24:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_contract$_FINMigrate_$2321_$returns$__$",
+                        "typeString": "function (contract FINMigrate)"
+                      }
+                    },
+                    "id": 1223,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1485:47:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1224,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1485:47:8"
+                }
+              ]
+            },
+            "documentation": "@dev Allows to change the migration information source contract.\n@param _newMigrationContract The address of the new migration contract",
+            "id": 1226,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 1219,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 1218,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 2506,
+                  "src": "1465:9:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1465:9:8"
+              }
+            ],
+            "name": "transferMigrationSource",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1217,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1216,
+                  "name": "_newMigrationContract",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1226,
+                  "src": "1424:32:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                    "typeString": "contract FINMigrate"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1215,
+                    "name": "FINMigrate",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2321,
+                    "src": "1424:10:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                      "typeString": "contract FINMigrate"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1423:34:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1220,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1475:0:8"
+            },
+            "scope": 1250,
+            "src": "1391:148:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1248,
+              "nodeType": "Block",
+              "src": "1812:201:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 1236,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 1232,
+                          "name": "_newMigrationContract",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1228,
+                          "src": "1830:21:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                            "typeString": "contract FINMigrate"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 1234,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "1863:1:8",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 1233,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "1855:7:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 1235,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1855:10:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "1830:35:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 1231,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        2576,
+                        2577
+                      ],
+                      "referencedDeclaration": 2576,
+                      "src": "1822:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 1237,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1822:44:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1238,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1822:44:8"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 1240,
+                        "name": "finMigrationContract",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1171,
+                        "src": "1908:20:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 1241,
+                        "name": "_newMigrationContract",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1228,
+                        "src": "1930:21:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        },
+                        {
+                          "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                          "typeString": "contract FINMigrate"
+                        }
+                      ],
+                      "id": 1239,
+                      "name": "MigrationSourceTransferred",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1181,
+                      "src": "1881:26:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$returns$__$",
+                        "typeString": "function (address,address)"
+                      }
+                    },
+                    "id": 1242,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1881:71:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1243,
+                  "nodeType": "EmitStatement",
+                  "src": "1876:76:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1246,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 1244,
+                      "name": "finMigrationContract",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1171,
+                      "src": "1962:20:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                        "typeString": "contract FINMigrate"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 1245,
+                      "name": "_newMigrationContract",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1228,
+                      "src": "1985:21:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                        "typeString": "contract FINMigrate"
+                      }
+                    },
+                    "src": "1962:44:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                      "typeString": "contract FINMigrate"
+                    }
+                  },
+                  "id": 1247,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1962:44:8"
+                }
+              ]
+            },
+            "documentation": "@dev Transfers the reference of the recorded migrations contract to a newMigrationContract.\n@param _newMigrationContract The address of the new migration contract",
+            "id": 1249,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "_transferMigrationSource",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1229,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1228,
+                  "name": "_newMigrationContract",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1249,
+                  "src": "1769:32:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                    "typeString": "contract FINMigrate"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1227,
+                    "name": "FINMigrate",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2321,
+                    "src": "1769:10:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_FINMigrate_$2321",
+                      "typeString": "contract FINMigrate"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1768:34:8"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1230,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1812:0:8"
+            },
+            "scope": 1250,
+            "src": "1735:278:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 1251,
+        "src": "340:1675:8"
+      }
+    ],
+    "src": "0:2015:8"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-08-10T07:46:05.553Z"
+}
