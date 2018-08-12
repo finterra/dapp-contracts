@@ -6,3 +6,7 @@ truffle-config.js
 unlock.js
 interaction/
 migrations/2_contracts.js
+Example.sol
+test/Example.js
+test.js
+.gitignore

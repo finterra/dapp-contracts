@@ -2,6 +2,9 @@ let mintableToken = artifacts.require('./MintableToken')
 let finMigrate = artifacts.require('./FINMigrate')
 var finExchange = artifacts.require('./FinExchange')
 
+var Web3 = require('web3')
+var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+
 const truffleAssert = require('truffle-assertions');
 const assert = require("chai").assert;
 require('chai')
@@ -23,6 +26,7 @@ contract('Finexchange', function (accounts) {
     describe('Updating Record in FinMigrate and Claiming tokens for the adddress', async function () {
         before('Should return finMigrate instance and deploy mintable contract', async function () {
             finMigrateIns = await finMigrate.deployed();
+            await finMigrateIns.setMigrationRate(100)
             mintableTokenIns = await mintableToken.new(finMigrateIns.address, "Fin Token", "FIN", 18);
         })
         it('Should update FinMigrate Records', async function () {
@@ -33,10 +37,30 @@ contract('Finexchange', function (accounts) {
         })
         it('Claim Should mint and transfer tokens to the finMigrate record', async function () {
             //claiming for acocunt1
-            await mintableTokenIns.claim({ from: accounts[1] })
-            await mintableTokenIns.claim({ from: accounts[2] })
-            await mintableTokenIns.claim({ from: accounts[3] })
-            await mintableTokenIns.claim({ from: accounts[4] })
+            //creating message hash including the address and kyc value
+            var msgHash = web3.utils.soliditySha3(accounts[1],true)
+            var signature = await web3.eth.sign(msgHash,accounts[0])
+            var sig = signature.slice(2)
+            var r = `0x${sig.slice(0, 64)}`
+            var s = `0x${sig.slice(64, 128)}`
+            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
+            await mintableTokenIns.claim(msgHash,v,r,s,{ from: accounts[1] })
+            // claiming for acocunt2
+            var msgHash = web3.utils.soliditySha3(accounts[2],true)
+            var signature = await web3.eth.sign(msgHash,accounts[0])
+            var sig = signature.slice(2)
+            var r = `0x${sig.slice(0, 64)}`
+            var s = `0x${sig.slice(64, 128)}`
+            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
+            await mintableTokenIns.claim(msgHash,v,r,s,{ from: accounts[2] })
+            //claiming for acocunt3
+            var msgHash = web3.utils.soliditySha3(accounts[4],true)
+            var signature = await web3.eth.sign(msgHash,accounts[0])
+            var sig = signature.slice(2)
+            var r = `0x${sig.slice(0, 64)}`
+            var s = `0x${sig.slice(64, 128)}`
+            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
+            await mintableTokenIns.claim(msgHash,v,r,s,{ from: accounts[4] })
         })
     })
 
@@ -68,8 +92,8 @@ contract('Finexchange', function (accounts) {
             txDeposit = await finexchangeIns.deposit("167A", record4 / 2, { from: accounts[1] })
             //testing record details
             let details = await finexchangeIns.getSeller("167A")
-            assert.equal(details[0], accounts[1], "seller should be the sender")
-            assert.equal(details[1].toNumber(), record4 / 2, "Record finAmount should be equal to the finAmount sent to the escrow")
+            assert.equal(details[0], accounts[1], "seller should be accounts[1]")
+            assert.equal(details[1].toNumber(), record4 / 2, "FinAmount should be equal amount(record4 / 2) sent to the escrow")
 
             //Transferring tokens to escrow wallet
             txTransfer = await mintableTokenIns.transfer(finexchangeIns.address, record4 / 2, { from: accounts[1] })

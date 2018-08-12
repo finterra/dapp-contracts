@@ -48,23 +48,34 @@ contract GTXSwap is Ownable {
     // as a result of swapped FIN points
     mapping (address => uint256) public claimableGTX;
 
-    constructor(uint256 _swapRate) public {
-        require(_swapRate <= 1000); // maximum 10x swap rate
-        require(_swapRate > 0); // minimum .01x swap rate
-        swapRate = _swapRate;
-    }
-
     event GTXRecordUpdate(
         address indexed _recordAddress,
         uint256 _finPointAmount,
         uint256 _gtxAmount
     );
-
     event GTXRecordMove(
         address indexed _oldAddress,
         address indexed _newAddress,
         uint256 _gtxAmount
     );
+
+    /**
+     * Throws if swapRate is not set
+    */
+    modifier canSwap() {
+        require(swapRate >0);
+        _;
+    }
+
+    /**
+     * @dev sets the GTX Swap rate
+     * @param _swapRate is the swap rate applied during FIN to GTX Swap
+    */
+    function setSwapRate(uint256 _swapRate) public onlyOwner{
+        require(_swapRate <= 1000); // maximum 10x swap rate
+        require(_swapRate > 0); // minimum .01x swap rate
+        swapRate = _swapRate;
+    }
 
     /**
     * @dev Used to calculate and store the amount of claimable GTX for those exsisting FIN point holders
@@ -75,7 +86,7 @@ contract GTXSwap is Ownable {
     * @param _applySwapRate - flag to apply swap rate or do one for one swap, any Finterra Technologies company FIN point allocations
     * are strictly swapped at one to one and do not recive the swap bonus applied to FIN point user balances
     */
-    function recordUpdate(address _recordAddress, uint256 _finPointAmount, bool _applySwapRate) public onlyOwner {
+    function recordUpdate(address _recordAddress, uint256 _finPointAmount, bool _applySwapRate) public onlyOwner canSwap {
         require(_finPointAmount >= 100000); // minimum allowed FIN 0.000000000001 (in base units) to avoid large rounding errors
 
         uint256 afterSwapGTX;
@@ -96,7 +107,7 @@ contract GTXSwap is Ownable {
     * @param _oldAddress - the original registered address
     * @param _newAddress - the new registerd address
     */
-    function recordMove(address _oldAddress, address _newAddress) public onlyOwner {
+    function recordMove(address _oldAddress, address _newAddress) public onlyOwner canSwap {
         require(claimableGTX[_oldAddress] != 0);
         require(claimableGTX[_newAddress] == 0);
 

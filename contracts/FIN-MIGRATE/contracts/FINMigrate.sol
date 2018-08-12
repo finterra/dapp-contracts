@@ -49,12 +49,6 @@ contract FINMigrate is Ownable {
     // as a result of swapped FIN points
     mapping (address => uint256) public claimableFIN;
 
-    constructor(uint256 _migrationRate) public {
-        require(_migrationRate <= 1000); // maximum 10x migration rate
-        require(_migrationRate >= 100); // minimum 1x migration rate
-        migrationRate = _migrationRate;
-    }
-
     event FINRecordUpdate(
         address indexed _recordAddress,
         uint256 _finPointAmount,
@@ -68,6 +62,23 @@ contract FINMigrate is Ownable {
     );
 
     /**
+     * Throws if migration rate is not set
+    */
+    modifier canMigrate() {
+        require(migrationRate >0);
+        _;
+    }
+    /**
+     * @dev sets the migration rate for fins
+     * @param _migrationRate is the migration rate applied during record creation
+    */
+    function setMigrationRate(uint256 _migrationRate) public onlyOwner{
+        require(_migrationRate <= 1000); // maximum 10x migration rate
+        require(_migrationRate >= 100); // minimum 1x migration rate
+        migrationRate = _migrationRate;
+    }
+
+    /**
     * @dev Used to calculate and store the amount of claimable FIN ERC20 from existing FIN point balances
     * @param _recordAddress - the registered address assigned to FIN ERC20 claiming
     * @param _finPointAmount - the original amount of FIN points to be migrated, this param should always be entered as base units
@@ -75,7 +86,7 @@ contract FINMigrate is Ownable {
     * @param _applyMigrationRate - flag to apply migration rate or not, any Finterra Technologies company FIN point allocations
     * are strictly migrated at one to one and do not recive the migration (airdrop) bonus applied to FIN point user balances
     */
-    function recordUpdate(address _recordAddress, uint256 _finPointAmount, bool _applyMigrationRate) public onlyOwner {
+    function recordUpdate(address _recordAddress, uint256 _finPointAmount, bool _applyMigrationRate) public onlyOwner canMigrate{
         require(_finPointAmount >= 100000); // minimum allowed FIN 0.000000000001 (in base units) to avoid large rounding errors
 
         uint afterMigrationFIN;
@@ -96,7 +107,7 @@ contract FINMigrate is Ownable {
     * @param _oldAddress - the original registered address
     * @param _newAddress - the new registerd address
     */
-    function recordMove(address _oldAddress, address _newAddress) public onlyOwner {
+    function recordMove(address _oldAddress, address _newAddress) public onlyOwner canMigrate{
         require(claimableFIN[_oldAddress] != 0);
         require(claimableFIN[_newAddress] == 0);
 

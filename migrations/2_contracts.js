@@ -18,14 +18,14 @@ module.exports = function (deployer) {
     deployer.link(SafeMath, MintableToken);
     deployer.link(SafeMath, FinExchange);
     //Deploy GTX Swap Contract
-    deployer.deploy(GTXSwap, 201);
+    deployer.deploy(GTXSwap);
 
     //Deploy FinMigrate Contract
-    deployer.deploy(FINMigrate, 375).then(function () {
+    deployer.deploy(FINMigrate).then(function () {
         console.log("FINMigrate.address", FINMigrate.address)
         //Deploy ERC20 Contract
         deployer.deploy(MintableToken, FINMigrate.address, "Fin Token", "FIN", 18).then(function () {
-            console.log("FinExchange.address", MintableToken.address)
+            console.log("MintableToken.address", MintableToken.address)
             //Deploy FinExchange Contract
             deployer.deploy(FinExchange, MintableToken.address).then(function () {
                 console.log("FinExchange.address", FinExchange.address)

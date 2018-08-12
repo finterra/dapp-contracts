@@ -43,6 +43,8 @@ contract MintableToken is StandardToken, Claimable {
     event MintFinished();
 
     bool public mintingFinished = false;
+    address public serverAddress;
+    bytes32 public msgHash;
 
     modifier canMint() {
         require(!mintingFinished);
@@ -60,8 +62,15 @@ contract MintableToken is StandardToken, Claimable {
 
     /**
     * @dev Allows addresses with FIN migration records to claim thier ERC20 FIN tokens. This is the only way minting can occur.
+    * @param _msgHash is the hash of the message
     */
-    function claim() public canClaim {
+    function claim(bytes32 _msgHash, uint8 v, bytes32 r, bytes32 s) public canClaim {
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+        bytes32 prefixedHash = keccak256(abi.encodePacked(prefix,_msgHash));
+        serverAddress = ecrecover(prefixedHash,v,r,s);
+        require(serverAddress == owner);
+        msgHash = keccak256(abi.encodePacked(msg.sender,true));
+        require(msgHash == _msgHash);
         claimed[msg.sender] = true;
         mint(msg.sender,finMigrationContract.recordGet(msg.sender));
     }

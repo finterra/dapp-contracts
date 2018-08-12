@@ -1,6 +1,8 @@
 var MintableToken = artifacts.require('./MintableToken')
 var finMigrate = artifacts.require('./FINMigrate')
 var standardToken = artifacts.require('./StandardToken')
+var Web3 = require('web3')
+var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
 
 const assert = require("chai").assert;
 require('chai')
@@ -23,7 +25,8 @@ contract('Mintable Token', function (accounts) {
 
         before('Should return finMigrate instance and deploy mintable contract', async function () {
             finInstance = await finMigrate.deployed();
-            mintableToken = await MintableToken.new(finInstance.address, "Fin Token", "FIN", 18);
+            await finInstance.setMigrationRate(100)
+            mintableToken = await MintableToken.new(finInstance.address, "Fin Token", "FIN", 18,{from:accounts[0]});
         })
 
         it('Should update FinMigrate Records', async function () {
@@ -33,39 +36,77 @@ contract('Mintable Token', function (accounts) {
             await finInstance.recordUpdate(accounts[4], record4, true, { from: accounts[0] })
         })
 
-        it('Claim Should mint and transfer tokens to the finMigrate record', async function () {
+        it('Claim Should mint and transfer tokens for successfull kyc', async function () {
             //claiming for acocunt1
-            await mintableToken.claim({ from: accounts[1] })
+            //creating message hash including the address and kyc value
+            var msgHash = web3.utils.soliditySha3(accounts[1],true)
+            var signature = await web3.eth.sign(msgHash,accounts[0])
+            var sig = signature.slice(2)
+            var r = `0x${sig.slice(0, 64)}`
+            var s = `0x${sig.slice(64, 128)}`
+            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
+            await mintableToken.claim(msgHash,v,r,s,{ from: accounts[1] })
             balance = await mintableToken.balanceOf.call(accounts[1])
             assert.equal(balance.toNumber(), record1, "Claimed Balance should be updated")
 
-            //claiming for acocunt2
-            await mintableToken.claim({ from: accounts[2] })
+            // claiming for acocunt2
+            var msgHash = web3.utils.soliditySha3(accounts[2],true)
+            var signature = await web3.eth.sign(msgHash,accounts[0])
+            var sig = signature.slice(2)
+            var r = `0x${sig.slice(0, 64)}`
+            var s = `0x${sig.slice(64, 128)}`
+            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
+            await mintableToken.claim(msgHash,v,r,s,{ from: accounts[2] })
             balance = await mintableToken.balanceOf.call(accounts[2])
             assert.equal(balance.toNumber(), record2, "Claimed Balance should be updated")
 
             //claiming for acocunt3
-            await mintableToken.claim({ from: accounts[3] })
+            var msgHash = web3.utils.soliditySha3(accounts[3],true)
+            var signature = await web3.eth.sign(msgHash,accounts[0])
+            var sig = signature.slice(2)
+            var r = `0x${sig.slice(0, 64)}`
+            var s = `0x${sig.slice(64, 128)}`
+            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
+            await mintableToken.claim(msgHash,v,r,s,{ from: accounts[3] })
             balance = await mintableToken.balanceOf.call(accounts[3])
             assert.equal(balance.toNumber(), record3, "Claimed Balance should be updated")
 
+        })
+
+        it('Claim should be rejected for unsuccessful kyc', async function () {
             //claiming for acocunt4
-            await mintableToken.claim({ from: accounts[4] })
-            balance = await mintableToken.balanceOf.call(accounts[4])
-            assert.equal(balance.toNumber(), record4, "Claimed Balance should be updated")
+            var msgHash = web3.utils.soliditySha3(accounts[4],false)
+            var signature = await web3.eth.sign(msgHash,accounts[0])
+            var sig = signature.slice(2)
+            var r = `0x${sig.slice(0, 64)}`
+            var s = `0x${sig.slice(64, 128)}`
+            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
+            await mintableToken.claim(msgHash,v,r,s,{ from: accounts[4] }).should.be.rejected
         })
 
         it('Claim Should not mint for non Existing record', async function () {
             //claiming for acocunt5
-            await mintableToken.claim({ from: accounts[5] }).should.be.rejected;
+            var msgHash = web3.utils.soliditySha3(accounts[5],true)
+            var signature = await web3.eth.sign(msgHash,accounts[0])
+            var sig = signature.slice(2)
+            var r = `0x${sig.slice(0, 64)}`
+            var s = `0x${sig.slice(64, 128)}`
+            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
+            await mintableToken.claim(msgHash,v,r,s,{ from: accounts[5] }).should.be.rejected;
         })
 
         it('Claim should reject if its already claimed', async function () {
-            await mintableToken.claim({ from: accounts[4] }).should.be.rejected;
+            var msgHash = web3.utils.soliditySha3(accounts[3],true)
+            var signature = await web3.eth.sign(msgHash,accounts[0])
+            var sig = signature.slice(2)
+            var r = `0x${sig.slice(0, 64)}`
+            var s = `0x${sig.slice(64, 128)}`
+            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
+            await mintableToken.claim(msgHash,v,r,s,{ from: accounts[3] }).should.be.rejected;
         })
 
         it('Total supply should be equal to the minted tokens', async function () {
-            var expectedTotal = record1 + record2 + record3 + record4
+            var expectedTotal = record1 + record2 + record3
             totalSupply = await mintableToken.totalSupply.call()
             assert.equal(totalSupply.toNumber(), expectedTotal, "Total supply should be equal to total record balance")
         })
@@ -99,7 +140,7 @@ contract('Mintable Token', function (accounts) {
         it(' trasnferFrom function- Should trasnfer 25fins from acocunt3 to account 4', async function () {
             await mintableToken.transferFrom(accounts[2], accounts[4], record2 / 2, { from: accounts[3] })
             balance = await mintableToken.balanceOf.call(accounts[4])
-            assert.equal(balance.toNumber(), record4 + (record2 / 2), "Transferred balance should be updated")
+            assert.equal(balance.toNumber(), (record2 / 2), "Transferred balance should be updated")
             var allowance = await mintableToken.allowance.call(accounts[2], accounts[3])
             assert.equal(allowance.toNumber(), 0, "Update allowance")
         })
@@ -131,7 +172,7 @@ contract('Mintable Token', function (accounts) {
             finContract = await finMigrate.new(100)
             await mintableToken.transferMigrationSource(finContract.address, { from: accounts[0] })
         })
-        
+
         it('Should get rejected as there are no records in the new FIn migration contract', async function () {
             await mintableToken.claim({ from: accounts[1] }).should.be.rejected;
         })

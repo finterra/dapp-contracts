@@ -21,6 +21,21 @@ contract('GTX SWAP', function (accounts) {
     var txUpdate;
     var txMove;
 
+    describe('Record update before setting swap rate', async function(){
+
+        it('Should be rejected before swap rate is set', async function () {
+            await gtxInstance.recordUpdate(accounts[1], finWithSwap, true, { from: accounts[0] }).should.be.rejected;
+        })
+    })
+    describe('set gtx swap rate',async function(){
+
+        it('Should set the swap rate by owner', async function(){
+            await gtxInstance.setSwapRate(1)
+        })
+        it('Should reject if swap rate is not set by the owner',async function(){
+            gtxInstance.setSwapRate(1,{from:accounts[1]}).should.be.rejected;
+        })
+    })
     describe('record update', function () {
 
         it('Should update with swap rate 1', async function () {
@@ -43,7 +58,6 @@ contract('GTX SWAP', function (accounts) {
             gtxInstance.recordUpdate(accounts[1], 5000000000000000000, true, { from: accounts[1] }).should.be.rejected;
         })
     })
-
     describe('record move', function () {
 
         it('Should move record for an existing "from" address and non-existing "to" address', async function () {
@@ -70,7 +84,6 @@ contract('GTX SWAP', function (accounts) {
             gtxInstance.recordMove(accounts[1], accounts[3], { from: accounts[1] }).should.be.rejected;
         })
     })
-
     describe('Testing Events',function(){
 
         it('Should emit record update event for account[1]',async function(){
@@ -85,6 +98,5 @@ contract('GTX SWAP', function (accounts) {
             });
         })
     })
-
 })
 

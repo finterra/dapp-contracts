@@ -10,7 +10,7 @@ contract('FIN Migrate', function (accounts) {
     let finInstance;
 
     before(async function () {
-        finInstance = await finMigrate.deployed();
+        finInstance = await finMigrate.new()
     })
 
     var fin = 5 * 10e18;
@@ -21,6 +21,21 @@ contract('FIN Migrate', function (accounts) {
     var txUpdate;
     var txMove;
 
+    describe('Record update before setting migration rate', async function(){
+
+        it('Should update with migration rate true', async function () {
+            await finInstance.recordUpdate(accounts[1], finWithMigRate, true, { from: accounts[0] }).should.be.rejected;
+        })
+    })
+    describe('set migration rate',async function(){
+
+        it('Should set the migration rate by owner', async function(){
+            await finInstance.setMigrationRate(100)
+        })
+        it('Should reject if migration rate is not set by the owner',async function(){
+            finInstance.setMigrationRate(100,{from:accounts[1]}).should.be.rejected;
+        })
+    })
     describe('Fin record update', function () {
 
         it('Should update with migration rate true', async function () {
