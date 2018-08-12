@@ -1,6 +1,8 @@
+build/
 node_modules/
 test/helpers/
 truffle-config.js
 *package-lock
 unlock.js
-*recordUpdate.js
+interaction/
+migrations/2_contracts.js
