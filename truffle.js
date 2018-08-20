@@ -24,7 +24,7 @@ module.exports = {
       port: 8545,
       network_id: 3,
       gas: 4700000,
-      from: '0x4d2657ed642f356eede2ad77856c58b021beb0ea', // Default ropsten account to deploy contracts
+      from: '0xabd362d60e32e5c9ec40cfddaefa8d0b91384771', // Default ropsten account to deploy contracts
     }
 
   }

@@ -9,4 +9,5 @@ migrations/2_contracts.js
 Example.sol
 test/Example.js
 test.js
+data/
 .gitignore

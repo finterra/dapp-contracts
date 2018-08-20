@@ -5,10 +5,6 @@ var SafeMath = artifacts.require("./SafeMath.sol");
 var FinExchange = artifacts.require("./FinExchange.sol")
 
 
-//GTX Swap Rate and FinMigrate Rate is configurable
-//Here GTX Swap Rate is 2.01 and FinMigrate Rate 3.75
-
-
 module.exports = function (deployer) {
     //deploy library
     deployer.deploy(SafeMath);
