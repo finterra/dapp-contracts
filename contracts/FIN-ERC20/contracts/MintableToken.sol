@@ -65,11 +65,10 @@ contract MintableToken is StandardToken, Claimable {
     * @param _msgHash is the hash of the message
     */
     function claim(bytes32 _msgHash, uint8 v, bytes32 r, bytes32 s) public canClaim {
-        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
-        bytes32 prefixedHash = keccak256(abi.encodePacked(prefix,_msgHash));
-        serverAddress = ecrecover(prefixedHash,v,r,s);
+        bytes memory prefix = "\x19Ethereum Signed Message:\n";
+        bytes32 msgHash = keccak256(prefix,"21",msg.sender,true);
+        serverAddress = ecrecover(_msgHash,v,r,s);
         require(serverAddress == owner);
-        msgHash = keccak256(abi.encodePacked(msg.sender,true));
         require(msgHash == _msgHash);
         claimed[msg.sender] = true;
         mint(msg.sender,finMigrationContract.recordGet(msg.sender));
