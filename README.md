@@ -10,24 +10,29 @@ Compiled contracts for FIN-ERC20, FIN-GTX-SWAP and FIN-MIGRATE.
 npm install -g truffle
 ```
 
-2. Compile and migrate test smart contracts
+2. After cloning the project run the below command to install dependencies.
+```
+npm i 
+```
+3. Compile and migrate test smart contracts
 ```
 truffle compile
 truffle migrate --network {ropsten/mainnet}
 truffle test
 ```
-The GTX_Swap_Rate and FinMigrate Rate can be  changed while deploying the contract. Smart contract does not support float values so we can specify 375 instead of 3.75. Internally smart contract will do the conversion
 
-3. Configure your address in truffle.js to deploy contracts from a specific address
+The GTX_Swap_Rate and FinMigrate Rate should be updated before excecuting the contract. Smart contract does not support float values so we can specify 375 instead of 3.75. Internally smart contract will do the conversion
+
+4. Configure your address in truffle.js to deploy contracts from a specific address
     `from: 'address'`
 
-4. To interact with smart contracts using web3.
+5. To interact with smart contracts using web3.
 
-    3a. Connect to the network
+    5a. Connect to the network
     ```
     var web3 = new Web3(new Web3.providers.HttpProvider("http://testnet:port"));
     ```
-    3b. Create a contract instance to interact with the contract deployed in the {ropsten/mainnet}
+    5b. Create a contract instance to interact with the contract deployed in the {ropsten/mainnet}
     ```
     var contractObj = new web3.eth.Contract(contractABI, contractAddress);
     ```
