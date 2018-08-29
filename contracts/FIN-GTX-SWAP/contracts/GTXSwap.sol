@@ -44,6 +44,9 @@ contract GTXSwap is Ownable {
     // e.g., 100 = 1:1 swap ratio
     uint swapRate;
 
+    // Total number of claimable GTX swapped by FIN
+    uint256 totalGTXSwap;
+
     // an address map used to store the per account claimable GTX
     // as a result of swapped FIN points
     mapping (address => uint256) public claimableGTX;
@@ -88,17 +91,14 @@ contract GTXSwap is Ownable {
     */
     function recordUpdate(address _recordAddress, uint256 _finPointAmount, bool _applySwapRate) public onlyOwner canSwap {
         require(_finPointAmount >= 100000); // minimum allowed FIN 0.000000000001 (in base units) to avoid large rounding errors
-
         uint256 afterSwapGTX;
-
         if(_applySwapRate == true) {
             afterSwapGTX = _finPointAmount.mul(swapRate).div(100);
         } else {
             afterSwapGTX = _finPointAmount;
         }
-
         claimableGTX[_recordAddress] = claimableGTX[_recordAddress].add(afterSwapGTX);
-
+        totalGTXSwap += claimableGTX[_recordAddress];
         emit GTXRecordUpdate(_recordAddress, _finPointAmount, claimableGTX[_recordAddress]);
     }
 
@@ -124,5 +124,13 @@ contract GTXSwap is Ownable {
     */
     function recordGet(address _recordAddress) view public returns (uint256) {
         return claimableGTX[_recordAddress];
+    }
+
+    /**
+    * @dev Used to retrieve the total GTX swap amount for GTX claiming after the GTX ICO
+    * @return uint256 - the sum total of recorded GTX after FIN point swapping
+    */
+    function getTotal() view public returns (uint256) {
+        return totalGTXSwap;
     }
 }

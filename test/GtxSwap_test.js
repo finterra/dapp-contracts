@@ -84,6 +84,14 @@ contract('GTX SWAP', function (accounts) {
             gtxInstance.recordMove(accounts[1], accounts[3], { from: accounts[1] }).should.be.rejected;
         })
     })
+    describe('total gtx swapped ', function(){
+
+        it('Should return the total gtx', async function(){
+            var total = await gtxInstance.getTotal.call()
+            var computedTotal = (finWithSwap / 100) +fin;
+            assert.equal(computedTotal,total.toNumber(),"balance should be equal")
+        })
+    })
     describe('Testing Events',function(){
 
         it('Should emit record update event for account[1]',async function(){
@@ -99,4 +107,3 @@ contract('GTX SWAP', function (accounts) {
         })
     })
 })
-
