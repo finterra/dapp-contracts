@@ -11,6 +11,8 @@ require('chai')
     .use(require('chai-as-promised'))
     .should();
 
+const pv = "0x6929676b180d25d2182516811adda52e8b0a18b7052abb8c66fd08608c58990f";
+
 contract('Finexchange', function (accounts) {
     //Global variables
     let finMigrateIns;
@@ -38,29 +40,29 @@ contract('Finexchange', function (accounts) {
         it('Claim Should mint and transfer tokens to the finMigrate record', async function () {
             //claiming for acocunt1
             //creating message hash including the address and kyc value
-            var msgHash = web3.utils.soliditySha3(accounts[1],true)
-            var signature = await web3.eth.sign(msgHash,accounts[0])
-            var sig = signature.slice(2)
-            var r = `0x${sig.slice(0, 64)}`
-            var s = `0x${sig.slice(64, 128)}`
-            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
-            await mintableTokenIns.claim(msgHash,v,r,s,{ from: accounts[1] })
+            var message = accounts[1]+1;   //here 1 denotes true where the kyc has verified
+            var response = web3.eth.accounts.sign(message, pv);
+            var msgHash = response.messageHash;
+            var v = parseInt(response.v, 16);
+            var r = response.r;
+            var s = response.s;
+            await mintableToken.claim(msgHash,v,r,s,{ from: accounts[1] })
             // claiming for acocunt2
-            var msgHash = web3.utils.soliditySha3(accounts[2],true)
-            var signature = await web3.eth.sign(msgHash,accounts[0])
-            var sig = signature.slice(2)
-            var r = `0x${sig.slice(0, 64)}`
-            var s = `0x${sig.slice(64, 128)}`
-            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
-            await mintableTokenIns.claim(msgHash,v,r,s,{ from: accounts[2] })
+            var message = accounts[2]+1;   //here 1 denotes true where the kyc has verified
+            var response = web3.eth.accounts.sign(message, pv);
+            var msgHash = response.messageHash;
+            var v = parseInt(response.v, 16);
+            var r = response.r;
+            var s = response.s;
+            await mintableToken.claim(msgHash,v,r,s,{ from: accounts[2] })
             //claiming for acocunt3
-            var msgHash = web3.utils.soliditySha3(accounts[4],true)
-            var signature = await web3.eth.sign(msgHash,accounts[0])
-            var sig = signature.slice(2)
-            var r = `0x${sig.slice(0, 64)}`
-            var s = `0x${sig.slice(64, 128)}`
-            var v = web3.utils.toDecimal(sig.slice(128, 130)) + 27
-            await mintableTokenIns.claim(msgHash,v,r,s,{ from: accounts[4] })
+            var message = accounts[4]+1;   //here 1 denotes true where the kyc has verified
+            var response = web3.eth.accounts.sign(message, pv);
+            var msgHash = response.messageHash;
+            var v = parseInt(response.v, 16);
+            var r = response.r;
+            var s = response.s;
+            await mintableToken.claim(msgHash,v,r,s,{ from: accounts[4] })
         })
     })
 
@@ -102,6 +104,10 @@ contract('Finexchange', function (accounts) {
             balance = await mintableTokenIns.balanceOf.call(accounts[1])
             result = record1 - (record4 / 2)
             assert.equal(balance.toNumber(), result, "balance should be  record1- record4/2 ")
+        })
+
+        it('Should reject if one address is invalid', async function () {
+            txSend = await finexchangeIns.sendTokens([buyer, 'exchange'], [toBuyer, toExchange]).should.be.rejected;
         })
 
         it('Should Send tokens to the buyer and exchange', async function () {
