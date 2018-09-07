@@ -51,6 +51,11 @@ contract GTXSwap is Ownable {
     // as a result of swapped FIN points
     mapping (address => uint256) public claimableGTX;
 
+    event GTXRecordCreate(
+        address indexed _recordAddress,
+        uint256 _finPointAmount,
+        uint256 _gtxAmount
+    );
     event GTXRecordUpdate(
         address indexed _recordAddress,
         uint256 _finPointAmount,
@@ -61,6 +66,7 @@ contract GTXSwap is Ownable {
         address indexed _newAddress,
         uint256 _gtxAmount
     );
+
 
     /**
      * Throws if swapRate is not set
@@ -89,7 +95,7 @@ contract GTXSwap is Ownable {
     * @param _applySwapRate - flag to apply swap rate or do one for one swap, any Finterra Technologies company FIN point allocations
     * are strictly swapped at one to one and do not recive the swap bonus applied to FIN point user balances
     */
-    function recordUpdate(address _recordAddress, uint256 _finPointAmount, bool _applySwapRate) public onlyOwner canSwap {
+    function recordCreate(address _recordAddress, uint256 _finPointAmount, bool _applySwapRate) public onlyOwner canSwap {
         require(_finPointAmount >= 100000); // minimum allowed FIN 0.000000000001 (in base units) to avoid large rounding errors
         uint256 afterSwapGTX;
         if(_applySwapRate == true) {
@@ -98,6 +104,30 @@ contract GTXSwap is Ownable {
             afterSwapGTX = _finPointAmount;
         }
         claimableGTX[_recordAddress] = claimableGTX[_recordAddress].add(afterSwapGTX);
+        totalGTXSwap += afterSwapGTX;
+        emit GTXRecordCreate(_recordAddress, _finPointAmount, claimableGTX[_recordAddress]);
+    }
+
+    /**
+    * @dev Used to calculate and update the amount of claimable GTX for those exsisting FIN point holders
+    * who opt to swap FIN points for GTX
+    * @param _recordAddress - the registered address where GTX can be claimed from
+    * @param _finPointAmount - the amount of FINs to be swapped for GTX, this param should always be entered as base units
+    * i.e., 1 FIN = 10**18 base units
+    * @param _applySwapRate - flag to apply swap rate or do one for one swap, any Finterra Technologies company FIN point allocations
+    * are strictly swapped at one to one and do not recive the swap bonus applied to FIN point user balances
+    */
+    function recordUpdate(address _recordAddress, uint256 _finPointAmount, bool _applySwapRate) public onlyOwner canSwap {
+        require(claimableGTX[_recordAddress] != 0);    //record should be created before updation
+        require(_finPointAmount >= 100000); // minimum allowed FIN 0.000000000001 (in base units) to avoid large rounding errors
+        uint256 afterSwapGTX;
+        totalGTXSwap -= claimableGTX[_recordAddress];
+        if(_applySwapRate == true) {
+            afterSwapGTX = _finPointAmount.mul(swapRate).div(100);
+        } else {
+            afterSwapGTX = _finPointAmount;
+        }
+        claimableGTX[_recordAddress] = afterSwapGTX;
         totalGTXSwap += claimableGTX[_recordAddress];
         emit GTXRecordUpdate(_recordAddress, _finPointAmount, claimableGTX[_recordAddress]);
     }

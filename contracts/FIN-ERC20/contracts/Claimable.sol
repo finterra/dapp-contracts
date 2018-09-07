@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "../../FIN-MIGRATE/contracts/FINMigrate.sol";
+import "../../FIN-POINT-RECORD/contracts/FINPointRecord.sol";
 import "../../OWNABLE/Ownable.sol";
 
 /**
@@ -11,8 +11,8 @@ import "../../OWNABLE/Ownable.sol";
 
 
 contract Claimable is Ownable {
-    //FINMigrate var definition
-    FINMigrate finMigrationContract;
+    // FINPointRecord var definition
+    FINPointRecord finPointRecordContract;
 
     // an address map used to store the cliamed flag, so accounts cannot claim more than once
     mapping (address => bool) public claimed;
@@ -27,15 +27,15 @@ contract Claimable is Ownable {
     * @dev The Claimable constructor sets the original `claim contract` to the provided _claimContract
     * account.
     */
-    constructor(FINMigrate _finMigrationContract) public {
-        finMigrationContract = _finMigrationContract;
+    constructor(FINPointRecord _finPointRecordContract) public {
+        finPointRecordContract = _finPointRecordContract;
     }
 
     /**
     * @dev Throws if called by any account other than the claimContract.
     */
     modifier canClaim() {
-        require(finMigrationContract.recordGet(msg.sender) != 0);
+        require(finPointRecordContract.recordGet(msg.sender) != 0);
         require(claimed[msg.sender] == false);
         _;
     }
@@ -44,7 +44,7 @@ contract Claimable is Ownable {
     * @dev Allows to change the migration information source contract.
     * @param _newMigrationContract The address of the new migration contract
     */
-    function transferMigrationSource(FINMigrate _newMigrationContract) public onlyOwner {
+    function transferMigrationSource(FINPointRecord _newMigrationContract) public onlyOwner {
         _transferMigrationSource(_newMigrationContract);
     }
 
@@ -52,9 +52,9 @@ contract Claimable is Ownable {
     * @dev Transfers the reference of the recorded migrations contract to a newMigrationContract.
     * @param _newMigrationContract The address of the new migration contract
     */
-    function _transferMigrationSource(FINMigrate _newMigrationContract) internal {
+    function _transferMigrationSource(FINPointRecord _newMigrationContract) internal {
         require(_newMigrationContract != address(0));
-        emit MigrationSourceTransferred(finMigrationContract, _newMigrationContract);
-        finMigrationContract = _newMigrationContract;
+        emit MigrationSourceTransferred(finPointRecordContract, _newMigrationContract);
+        finPointRecordContract = _newMigrationContract;
     }
 }

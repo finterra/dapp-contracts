@@ -30,6 +30,7 @@ pragma solidity ^0.4.24;
 
 import "./ERC20Interface.sol";
 import "../../MATH/SafeMath.sol";
+import "../../TIMELOCK/contracts/TimeLock.sol";
 
 /**
  * @title Standard ERC20 token
@@ -50,6 +51,22 @@ contract StandardToken is ERC20Interface {
     uint8 public decimals;
     uint256 totalSupply_;
 
+    // the following variables need to be here for scoping to properly freeze normal transfers after migration has started
+    // migrationStart flag
+    bool migrationStart;
+    // var for storing the the TimeLock contract deployment address (for vesting FIN allocations)
+    TimeLock timeLockContract;
+
+    /**
+     * @dev Modifier for allowing only TimeLock transactions to occur after the migration period has started
+    */
+    modifier migrateStarted {
+        if(migrationStart == true){
+            require(msg.sender == address(timeLockContract));
+        }
+        _;
+    }
+
     constructor(string _name, string _symbol, uint8 _decimals) public {
         name = _name;
         symbol = _symbol;
@@ -68,7 +85,7 @@ contract StandardToken is ERC20Interface {
     * @param _to The address to transfer to.
     * @param _value The amount to be transferred.
     */
-    function transfer(address _to, uint256 _value) public returns (bool) {
+    function transfer(address _to, uint256 _value) public migrateStarted returns (bool) {
         require(_to != address(0));
         require(_value <= balances[msg.sender]);
 
@@ -99,6 +116,7 @@ contract StandardToken is ERC20Interface {
         uint256 _value
         )
         public
+        migrateStarted
         returns (bool)
     {
         require(_to != address(0));

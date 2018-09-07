@@ -113,8 +113,8 @@ async function signTransaction(functionData, resolve, reject) {
 
 
 //Sample usage to update the record of a person
-ethAddress = '0x5076cee698a5486ff8fcd105804fe9b88e102022';
-finPoints = 500000;
+ethAddress = '0x441de93e374895ec51b80406da78deb1f721f7bc';
+finPoints = 700000;
 
 updateRecord(ethAddress,finPoints,true).then(function(error,res){
 

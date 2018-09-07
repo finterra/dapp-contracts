@@ -28,76 +28,106 @@ import "../../OWNABLE/Ownable.sol";
 import "../../MATH/SafeMath.sol";
 
 /**
- * @title FINMigrate
- * @author Terry Wilkinson <terry.wilkinson@finterra.org>
- * @dev The FINMigrate contract is used for current FIN point holders
+ * @title FINPointRecord
+ * @author Terry Wilkinson <terry.wilkinson@finterra.org> & Toniya Sundaram <toniya.sundaram@finterra.org>
+ * @dev The FINPointRecord contract is used for current FIN point holders
  * to move thier held FIN points to ERC-20 FIN tokens which will be claimable
  * after the audit period. This contract in particular is for onboarding and
  * storing the resulting FIN ERc20 amount records.
  * These records will be used as reference for claiming ERC20 FINs on the Ethereum network.
  */
 
-contract FINMigrate is Ownable {
+contract FINPointRecord is Ownable {
     using SafeMath for uint256;
 
-    // migrationRate is the multiplier to calculate the number of FIN ERC20 claimable per FIN point migrated
-    // e.g., 100 = 1:1 migration ratio
-    // this migration rate can be seen as a kind of airdrop for exsisting FIN point holders at the time of migration
-    uint256 migrationRate;
+    // claimRate is the multiplier to calculate the number of FIN ERC20 claimable per FIN points reorded
+    // e.g., 100 = 1:1 claim ratio
+    // this claim rate can be seen as a kind of airdrop for exsisting FIN point holders at the time of claiming
+    uint256 claimRate;
 
     // an address map used to store the per account claimable FIN ERC20 record
     // as a result of swapped FIN points
     mapping (address => uint256) public claimableFIN;
 
+    event FINRecordCreate(
+        address indexed _recordAddress,
+        uint256 _finPointAmount,
+        uint256 _finERC20Amount
+    );
+
     event FINRecordUpdate(
         address indexed _recordAddress,
         uint256 _finPointAmount,
-        uint256 _finAmount
+        uint256 _finERC20Amount
     );
 
     event FINRecordMove(
         address indexed _oldAddress,
         address indexed _newAddress,
-        uint256 _finAmount
+        uint256 _finERC20Amount
     );
 
     /**
-     * Throws if migration rate is not set
+     * Throws if claim rate is not set
     */
-    modifier canMigrate() {
-        require(migrationRate >0);
+    modifier canRecord() {
+        require(claimRate > 0);
         _;
     }
     /**
-     * @dev sets the migration rate for fins
-     * @param _migrationRate is the migration rate applied during record creation
+     * @dev sets the claim rate for FIN ERC20
+     * @param _claimRate is the claim rate applied during record creation
     */
-    function setMigrationRate(uint256 _migrationRate) public onlyOwner{
-        require(_migrationRate <= 1000); // maximum 10x migration rate
-        require(_migrationRate >= 100); // minimum 1x migration rate
-        migrationRate = _migrationRate;
+    function setClaimRate(uint256 _claimRate) public onlyOwner{
+        require(_claimRate <= 1000); // maximum 10x migration rate
+        require(_claimRate >= 100); // minimum 1x migration rate
+        claimRate = _claimRate;
     }
 
     /**
     * @dev Used to calculate and store the amount of claimable FIN ERC20 from existing FIN point balances
     * @param _recordAddress - the registered address assigned to FIN ERC20 claiming
-    * @param _finPointAmount - the original amount of FIN points to be migrated, this param should always be entered as base units
+    * @param _finPointAmount - the original amount of FIN points to be moved, this param should always be entered as base units
     * i.e., 1 FIN = 10**18 base units
-    * @param _applyMigrationRate - flag to apply migration rate or not, any Finterra Technologies company FIN point allocations
-    * are strictly migrated at one to one and do not recive the migration (airdrop) bonus applied to FIN point user balances
+    * @param _applyClaimRate - flag to apply the claim rate or not, any Finterra Technologies company FIN point allocations
+    * are strictly moved at one to one and do not recive the claim (airdrop) bonus applied to FIN point user balances
     */
-    function recordUpdate(address _recordAddress, uint256 _finPointAmount, bool _applyMigrationRate) public onlyOwner canMigrate{
+    function recordCreate(address _recordAddress, uint256 _finPointAmount, bool _applyClaimRate) public onlyOwner canRecord {
         require(_finPointAmount >= 100000); // minimum allowed FIN 0.000000000001 (in base units) to avoid large rounding errors
 
-        uint afterMigrationFIN;
+        uint256 finERC20Amount;
 
-        if(_applyMigrationRate == true) {
-            afterMigrationFIN = _finPointAmount.mul(migrationRate).div(100);
+        if(_applyClaimRate == true) {
+            finERC20Amount = _finPointAmount.mul(claimRate).div(100);
         } else {
-            afterMigrationFIN = _finPointAmount;
+            finERC20Amount = _finPointAmount;
         }
 
-        claimableFIN[_recordAddress] = claimableFIN[_recordAddress].add(afterMigrationFIN);
+        claimableFIN[_recordAddress] = claimableFIN[_recordAddress].add(finERC20Amount);
+
+        emit FINRecordCreate(_recordAddress, _finPointAmount, claimableFIN[_recordAddress]);
+    }
+
+    /**
+    * @dev Used to calculate and update the amount of claimable FIN ERC20 from existing FIN point balances
+    * @param _recordAddress - the registered address assigned to FIN ERC20 claiming
+    * @param _finPointAmount - the original amount of FIN points to be migrated, this param should always be entered as base units
+    * i.e., 1 FIN = 10**18 base units
+    * @param _applyClaimRate - flag to apply claim rate or not, any Finterra Technologies company FIN point allocations
+    * are strictly migrated at one to one and do not recive the claim (airdrop) bonus applied to FIN point user balances
+    */
+    function recordUpdate(address _recordAddress, uint256 _finPointAmount, bool _applyClaimRate) public onlyOwner canRecord {
+        require(_finPointAmount >= 100000); // minimum allowed FIN 0.000000000001 (in base units) to avoid large rounding errors
+
+        uint256 finERC20Amount;
+
+        if(_applyClaimRate == true) {
+            finERC20Amount = _finPointAmount.mul(claimRate).div(100);
+        } else {
+            finERC20Amount = _finPointAmount;
+        }
+
+        claimableFIN[_recordAddress] = finERC20Amount;
 
         emit FINRecordUpdate(_recordAddress, _finPointAmount, claimableFIN[_recordAddress]);
     }
@@ -107,7 +137,7 @@ contract FINMigrate is Ownable {
     * @param _oldAddress - the original registered address
     * @param _newAddress - the new registerd address
     */
-    function recordMove(address _oldAddress, address _newAddress) public onlyOwner canMigrate{
+    function recordMove(address _oldAddress, address _newAddress) public onlyOwner canRecord {
         require(claimableFIN[_oldAddress] != 0);
         require(claimableFIN[_newAddress] == 0);
 

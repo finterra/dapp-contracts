@@ -58,12 +58,13 @@ contract TimeLock {
     function timeLockTokens(uint256 _lockTimeS) public {
 
         uint256 lockAmount = ERC20Contract.allowance(msg.sender, this); // get this time lock contract's approved amount of tokens
-        
+
+
         require(lockAmount != 0); // check that this time lock contract has been approved to lock an amount of tokens on the msg.sender's behalf
-    
+
         if (accounts[msg.sender].balance > 0) { // if locked balance already exists, add new amount to the old balance and retain the same release time
             accounts[msg.sender].balance = SafeMath.add(accounts[msg.sender].balance, lockAmount);
-       } else { // else populate the blanace and set the release time for the newly locked balance
+      } else { // else populate the balance and set the release time for the newly locked balance
             accounts[msg.sender].balance = lockAmount;
             accounts[msg.sender].releaseTime = SafeMath.add(now, _lockTimeS);
         }
@@ -71,28 +72,33 @@ contract TimeLock {
         emit Lock(msg.sender, lockAmount, accounts[msg.sender].releaseTime);
 
         ERC20Contract.transferFrom(msg.sender, this, lockAmount);
-        
+
     }
-    
+
     function tokenRelease() public {
         // check if user has funds due for pay out because lock time is over
-        if (accounts[msg.sender].balance != 0 && accounts[msg.sender].releaseTime < now) {
-            accounts[msg.sender].balance = 0;
-            accounts[msg.sender].releaseTime = 0;
+        require (accounts[msg.sender].balance != 0 && accounts[msg.sender].releaseTime <= now);
+        accounts[msg.sender].balance = 0;
+        accounts[msg.sender].releaseTime = 0;
+        emit UnLock(msg.sender, accounts[msg.sender].balance, now);
+        ERC20Contract.transfer(msg.sender, accounts[msg.sender].balance);
 
-            emit UnLock(msg.sender, accounts[msg.sender].balance, now);
-
-            address(ERC20Contract).transfer(accounts[msg.sender].balance);
-        }
     }
 
     // some helper functions for demo purposes (not required)
     function getLockedFunds(address _account) view public returns (uint _lockedBalance) {
         return accounts[_account].balance;
     }
-    
+
     function getReleaseTime(address _account) view public returns (uint _releaseTime) {
         return accounts[_account].releaseTime;
     }
 
+    /**
+    * @dev Used to retrieve the ERC20 contract address that this deployment is attatched to
+    * @return address - the ERC20 contract address that this deployment is attatched to
+    */
+    function getERC20() public view returns (address) {
+        return ERC20Contract;
+    }
 }

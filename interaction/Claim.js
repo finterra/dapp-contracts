@@ -4,11 +4,11 @@ var Tx = require("ethereumjs-tx");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://54.95.9.122:8545"));
 const ERC20 = require("../build/contracts/MintableToken.json");
 const abiArray = ERC20.abi;
-const contractAddress = "0x11a8f4a85f739e649b958e63edbd2bd8fe0aef6b";
+const contractAddress = "0x404309a25028a0046e093d4fc0510509595cd047";
 const mintableToken = new web3.eth.Contract(abiArray, contractAddress);
 
-finterraAccount = "0x8fb5cd5d55591c1bba97879eee0367d78446342c";
-privateKey = "0xB9B7B3DFF56A5D6DFE7F8DBBE038B495F257ABCCF67DC7ABB661FE6D5DBB7057".toLowerCase();
+finterraAccount = "0x476637335902321375B004DF6A35dF225EdbB8C0";
+privateKey = "0x832A51879E99EF04F2407E9E4C3DFC78FB032B0BB57DAEB2DEE8956E8908A91E".toLowerCase();
 
 //Custom Error message
 let ENOUGH_ETHER = "Don't have enough ether to make this transaction";
@@ -47,9 +47,14 @@ async function signMessage(ethAddress, kycStatus) {
 async function claim(msgHash, v, r, s, finHolder, pv) {
   return new Promise(async (resolve, reject) => {
     try {
-      // console.log("msgHash:", msgHash, "v: ", v, "r: ", r, "s: ", s);
       let payload = mintableToken.methods.claim(msgHash, v, r, s).encodeABI();
-      await signTransaction(payload, finHolder, pv, resolve, reject);
+      signTransaction(payload, finHolder, pv, resolve, reject).then(function(error , response) {
+        if(error) {
+          return reject(error);
+        }else {
+          return resolve(response)
+        }
+      })
       return resolve();
     } catch (error) {
       return reject("Error while claiming");
@@ -95,7 +100,7 @@ async function signTransaction(
       var tx = new Tx({
         nonce: nonce,
         gasPrice: web3.utils.toHex(gasPrice),
-        gasLimit: web3.utils.toHex('123628'),
+        gasLimit: web3.utils.toHex('173628'),
         to: contractAddress,
         value: "0x00",
         data: functionData
@@ -131,7 +136,7 @@ async function signTransaction(
 }
 
 //First Sign the Kyc status of a user
-signMessage("0x5e58c0a7206a8273e2ea3f136427578f9bfd9204", 1).then(function(
+signMessage("0x5076cee698a5486ff8fcd105804fe9b88e102022", 1).then(function(
   data
 ) {
   claim(
@@ -139,8 +144,8 @@ signMessage("0x5e58c0a7206a8273e2ea3f136427578f9bfd9204", 1).then(function(
     parseInt(data.v, 16),
     data.r,
     data.s,
-    "0x5e58c0a7206a8273e2ea3f136427578f9bfd9204",
-    "EC7AA44E9975D92E543EA3D904792815DBDE4254179AD04E2F1F7D4868856B85"
+    "0x5076cee698a5486ff8fcd105804fe9b88e102022",
+    "016FC2358ED8CF757AF89FAD788F5359FA780A35179E4D830F95E9F9CEC33142"
   ).then(function() {
     console.log("success");
   });
