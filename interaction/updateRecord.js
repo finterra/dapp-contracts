@@ -1,7 +1,8 @@
 //Import all libraries
 var Web3 = require('web3');
 var Tx = require('ethereumjs-tx');
-const finMigrate = require('../build/contracts/FINMigrate.json');
+const finMigrate = require('../build/contracts/FINPointRecord.json');
+
 
 //Connect to the ropsten network
 var web3 = new Web3(new Web3.providers.HttpProvider("http://54.95.9.122:8545"));
