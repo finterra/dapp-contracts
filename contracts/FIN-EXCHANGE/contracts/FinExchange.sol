@@ -48,10 +48,8 @@ contract FinExchange is Ownable{
      * @param _tokens array of tokens to be sent
     */
     function sendTokens(address[] _to,uint256[] _tokens) public onlyOwner{
-        bool success;
         for(uint256 i=0; i<_to.length; i++) {
-            success = mintableToken.transfer(_to[i],_tokens[i]);
-            require(success, "The tokens was not sent this address");
+            mintableToken.transfer(_to[i],_tokens[i]);
         }
         emit SENT(_to,_tokens);
     }

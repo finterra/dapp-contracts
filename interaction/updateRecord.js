@@ -1,18 +1,20 @@
 //Import all libraries
 var Web3 = require('web3');
 var Tx = require('ethereumjs-tx');
-var BigNumber = require('bignumber.js');
 const finMigrate = require('../build/contracts/FINMigrate.json');
 
 //Connect to the ropsten network
 var web3 = new Web3(new Web3.providers.HttpProvider("http://54.95.9.122:8545"));
+var BN = web3.utils.BN;
 
 //Initializing variables
 let abiArray = finMigrate.abi
-let contractAddress = '0xeb5a42a22878bcd574fb28b03c44c95fe3f50838'
+let contractAddress = '0x41331C10C70E715BD317bA2Ac4a3564C159820b1'
 const contractObj = new web3.eth.Contract(abiArray, contractAddress);
-const owner = '0x8fb5cd5d55591c1bba97879eee0367d78446342c'
-const privateKey = 'B9B7B3DFF56A5D6DFE7F8DBBE038B495F257ABCCF67DC7ABB661FE6D5DBB7057'
+
+
+const owner = '0x476637335902321375B004DF6A35dF225EdbB8C0'.toLowerCase();
+const privateKey = '832A51879E99EF04F2407E9E4C3DFC78FB032B0BB57DAEB2DEE8956E8908A91E'
 
 //Custom Error message
 let ENOUGH_ETHER = "Don't have enough ether to make this transaction";
@@ -23,12 +25,19 @@ let ENOUGH_ETHER = "Don't have enough ether to make this transaction";
  * @param {*String} finPoints [fin points is the total fins allocated to that person]
  * @param {*Boolean} migrationRate [migrationRate is whether the migration rate is applicable to that person]
  */
-async function updateRecord(finHolder, finPoints,migrationRate) {
+async function updateRecord(finHolder, finPoints, migrationRate) {
     return new Promise(async (resolve,reject) => {
         try {
+            finPoints = web3.utils.toWei(new BN(finPoints).toString(), 'ether');
             let data = contractObj.methods.recordUpdate(finHolder, finPoints, migrationRate).encodeABI();
-            await signTransaction(data, resolve, reject)
-            return resolve("Successful")
+            signTransaction(data, resolve, reject).then(function(error, response) {
+                if(error) {
+                    reject(error);
+                }else {
+                    return resolve("Successful",response)
+                }
+            })
+
         } catch (error) {
             return reject(error)
         }
@@ -76,7 +85,9 @@ async function signTransaction(functionData, resolve, reject) {
                 .on('transactionHash', function (hash) {
                     console.log(hash);
                 })
-                .on('receipt', function (receipt) {
+                .on('receipt', function (receipt,data) {
+                    console.log("data",data)
+                    console.log("receipt",receipt)
                     resolve([receipt]);
                 })
                 .on('error', function (error) {
@@ -102,7 +113,11 @@ async function signTransaction(functionData, resolve, reject) {
 
 
 //Sample usage to update the record of a person
-updateRecord('0x5076cee698a5486ff8fcd105804fe9b88e102022',80000000000000000000,true).then(function(error,res){
+ethAddress = '0x5076cee698a5486ff8fcd105804fe9b88e102022';
+finPoints = 500000;
+
+updateRecord(ethAddress,finPoints,true).then(function(error,res){
+
     if(!error) {
         console.log(res)
     }
